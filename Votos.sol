@@ -26,4 +26,11 @@ contract VotingSystem {
         admin = msg.sender;
         endVoteTime = block.timestamp + 3 days;
     }
+
+    function agregarPropuesta (string memory nombrePropuesta) public {
+        require(msg.sender == admin, "No tienes permiso para hacer esto");
+        propuestas.push(Propuesta(nombrePropuesta, 0));
+    }
 }
+
+
