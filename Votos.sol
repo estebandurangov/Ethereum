@@ -22,15 +22,29 @@ contract VotingSystem {
 
     uint public endVoteTime;
 
+    modifier isAdmin {
+        require(msg.sender == admin, "No tienes permiso para hacer esto"); //validar permisos para agregar propuestas
+        _;
+    }
+
     constructor() {
         admin = msg.sender;
         endVoteTime = block.timestamp + 3 days;
     }
 
-    function agregarPropuesta (string memory nombrePropuesta) public {
-        require(msg.sender == admin, "No tienes permiso para hacer esto");
+    function agregarPropuesta (string memory nombrePropuesta) public isAdmin {
         propuestas.push(Propuesta(nombrePropuesta, 0));
     }
+
+    function vote(uint indicePropuesta) public {
+        require(whitelist[msg.sender], "no estas en la whiteliste" );
+        require(!hasVoted[msg.sender], "ya has votado");
+        require(block.timestamp <= endVoteTime, "se ha agotado el tiempo para las votaciones");
+
+        hasVoted[msg.sender] = true;
+        propuestas[indicePropuesta].votos += 1;
+    }
+    
 }
 
 
