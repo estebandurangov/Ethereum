@@ -5,13 +5,13 @@ contract VotingSystem {
 
     //Una propuesta consta de un nombre (nombre de la propuesta) y un contador de votos (que ha recibido la propuesta).
 
-    struct Propuesta {
-        string nombre;
-        uint votos;
+    struct Proposal {
+        string name;
+        uint voteCount;
     }
     
     //lista de propuesta
-    Propuesta[] public propuestas;
+    Proposal[] public proposals;
 
     //direccion Ethereum del administrador
     address public admin;
@@ -23,7 +23,7 @@ contract VotingSystem {
     uint public endVoteTime;
 
     modifier isAdmin {
-        require(msg.sender == admin, "No tienes permiso para hacer esto"); //validar permisos para agregar propuestas
+        require(msg.sender == admin, "No tienes permiso para hacer esto"); //validar permisos
         _;
     }
 
@@ -32,21 +32,21 @@ contract VotingSystem {
         endVoteTime = block.timestamp + 3 days;
     }
 
-    function agregarPropuesta (string memory nombrePropuesta) public isAdmin {
-        propuestas.push(Propuesta(nombrePropuesta, 0));
+    function addProposal (string memory proposalName) public isAdmin {
+        proposals.push(Proposal(proposalName, 0));
     }
 
-    function actualizarWhitelist (address direccion) public isAdmin {
-        whitelist[direccion] = true;
+    function whitelistUpdate (address _address) public isAdmin {
+        whitelist[_address] = true;
     }
 
-    function vote(uint indicePropuesta) public {
+    function vote(uint proposalId) public {
         require(whitelist[msg.sender], "no estas en la whiteliste" );
         require(!hasVoted[msg.sender], "ya has votado");
         require(block.timestamp <= endVoteTime, "se ha agotado el tiempo para las votaciones");
 
         hasVoted[msg.sender] = true;
-        propuestas[indicePropuesta].votos += 1;
+        proposals[proposalId].voteCount += 1;
     }
     
 }
