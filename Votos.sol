@@ -36,6 +36,10 @@ contract VotingSystem {
         propuestas.push(Propuesta(nombrePropuesta, 0));
     }
 
+    function actualizarWhitelist (address direccion) public isAdmin {
+        whitelist[direccion] = true;
+    }
+
     function vote(uint indicePropuesta) public {
         require(whitelist[msg.sender], "no estas en la whiteliste" );
         require(!hasVoted[msg.sender], "ya has votado");
